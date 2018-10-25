@@ -1,0 +1,162 @@
+swagger: '2.0'
+info:
+  description: API Chatbox Core in LOCAL
+  version: 1.0.0
+  title: Chatbox Core
+host: 'chatboxcoredev.mybluemix.net'
+basePath: /api/
+tags:
+  - name: user
+    description: Operations about user
+schemes:
+  - http
+  - https
+paths:
+  /user/register:
+    post:
+      tags:
+        - user
+      summary: Register user
+      description: This is for create a user for first time
+      operationId: register
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Created user object
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: email is mandatory
+        '404':
+          description: User can not register. Try Again.
+        '406':
+          description: Existing user
+        '500':
+          description: Error creating user        
+  /user/login:
+    post:
+      tags:
+        - user
+      summary: User Login
+      description: This is for login a user. Send email and password and return a token.
+      operationId: login
+      produces:
+        - application/xml
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Login
+          required: true
+          schema:
+            $ref: '#/definitions/SignIn'
+      responses:
+        '200':
+          description: login successful
+          schema:
+            $ref: '#/definitions/Token'
+        '404':
+          description: Bad user or password
+        '500':
+          description: Server Error          
+definitions:
+  Name:
+    type: object
+    properties:
+      first:
+        type: string
+      last:
+        type: string
+  Coordinates:
+    type: object
+    properties:
+      latitud:
+        type: string
+      longitude:
+        type: string
+  Timezone:
+    type: object
+    properties:
+      offset:
+        type: string
+      description:
+        type: string
+  Location:
+    type: object
+    properties:
+      street:
+        type: string
+      city:
+        type: string
+      state:
+        type: string
+      country:
+        type: string
+      pc:
+        type: string
+      coordinates:
+        $ref: '#/definitions/Coordinates'
+      timezone:
+        $ref: '#/definitions/Timezone'
+  Login:
+    type: object
+    required:
+    - "password"
+    properties:
+      password:
+        type: string
+  Token:
+    type: object
+    properties:
+      token:
+        type: string
+  SignIn:
+    type: object
+    required:
+    - "email"
+    - "password"
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+  User:
+    type: object
+    required:
+    - "email"
+    properties:
+      role:
+        type: string
+        default: ROLE_USER
+      name:
+        $ref: '#/definitions/Name'
+      location:
+        $ref: '#/definitions/Location'
+      email:
+        type: string
+      login:
+        $ref: '#/definitions/Login'
+      dob:
+        type: string
+        format: date-time
+      phone:
+        type: string
+      cell:
+        type: string
+      registered:
+        type: string
+        format: date-time
+    xml:
+      name: User
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'
